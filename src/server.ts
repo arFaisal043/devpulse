@@ -8,6 +8,7 @@ const startServer = async () => {
     try {
         connectDB();
         createTable();
+        
         app.listen(config.port, () => {
           console.log(`Server is running on http://localhost:${config.port}`);
         });
@@ -17,4 +18,4 @@ const startServer = async () => {
     }
 }
 
-startServer();
+startServer(); // config.port
