@@ -1,28 +1,28 @@
 import type { Response } from "express";
 
-// ________ Using generics type
 
-type TResponse <T> = {
-    statusCode: number;
-    success: boolean;
-    message: string;
-    data?: T;
-    error?: any;
-}
-
-export const sendSuccessResponse = <T>(res: Response, data: TResponse<T>) => {
-  res.status(data.statusCode).json({
-    success: data.success,
-    message: data.message,
-    data: data.data,
+export const sendSuccess = (
+  res: Response,
+  statusCode: number,
+  message: string,
+  data?: any,
+) => {
+  res.status(statusCode).json({
+    success: true,
+    message,
+    data,
   });
 };
 
-export const sendErrorResponse = <T>(res: Response, data: TResponse<T>) => {
-  res.status(data.statusCode).json({
-    success: data.success,
-    message: data.message,
-    error: data.error,
+export const sendError = (
+  res: Response,
+  statusCode: number,
+  message: string,
+  errors?: any,
+) => {
+  res.status(statusCode).json({
+    success: false,
+    message,
+    errors,
   });
 };
-
