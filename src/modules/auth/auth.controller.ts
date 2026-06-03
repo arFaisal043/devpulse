@@ -7,10 +7,16 @@ import { catchAsync } from "../../utils/catchAsync";
 // sign up
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authservice.registerUserService(req.body);
-  sendSuccess(res, StatusCodes.CREATED, "User registered successfully", result);
+  sendSuccess(res, StatusCodes.CREATED, "User registered successfully!", result);
 });
+
+const loginUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await authservice.loginUserService(req.body);
+  sendSuccess(res, StatusCodes.OK, "Login successful!", result);
+})
 
 
 export const authController = {
-  registerUser
+  registerUser,
+  loginUser
 }

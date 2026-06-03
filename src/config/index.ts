@@ -30,6 +30,10 @@ export const connectDB = async () => {
 
 const config = {
   port: process.env.PORT,
+  secret: process.env.JWT_SECRET_KEY,
+  expiresIn: process.env.JWT_EXPIRES_IN,
+  refreshSecret: process.env.JWT_REFRESH_SECRET_KEY,
+  refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN
 };
 
 export default config;
