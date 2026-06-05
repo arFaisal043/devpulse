@@ -1,6 +1,7 @@
 import express, { type Application, type Request, type Response } from "express";
 import { userRoute } from "./modules/auth/auth.route";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import CookieParser from "cookie-parser";
 
 const app: Application = express();
 
@@ -8,6 +9,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.text());
 
+app.use(CookieParser());
 
 // _________ Root Route
 

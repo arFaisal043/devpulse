@@ -3,7 +3,7 @@ import { CustomError } from "../../utils/customError";
 import config, { pool } from "../../config";
 import bcrypt from "bcryptjs";
 import type { LoginInterface, SignupInterface } from "./auth.interface";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 
 const registerUserService = async (userData: SignupInterface) => {
   const { name, email, password, role } = userData;
@@ -125,10 +125,45 @@ const loginUserService = async (credentials: LoginInterface) => {
 
 
 const refreshAccessToken = async (refreshToken: string) => {
-  if(!refreshToken) {
+  // __________ 1. if client's doesn't has refresh token in cookies
+  if (!refreshToken) {
     throw new CustomError("Refresh token is required", StatusCodes.BAD_REQUEST);
   }
-  
+
+  try {
+    // __________ 2. verify the token
+    const decode = jwt.verify(
+      refreshToken as string,
+      config.refreshSecret as string,
+    ) as JwtPayload;
+
+    // __________ 3. find the user into DB or not?
+    const userData = await pool.query(
+      `
+    SELECT * FROM users WHERE email=$1
+  `,
+      [decode.email],
+    );
+    const user = userData.rows[0];
+
+    if (!user) {
+      throw new CustomError("User no longer exists", StatusCodes.UNAUTHORIZED);
+    }
+
+    const payload = {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+    };
+
+    const accessToken = jwt.sign(payload, config.secret as string, {
+      expiresIn: config.expiresIn as any,
+    });
+
+    return {accessToken};
+  } catch (error) {
+    throw new CustomError("Invalid or expired refresh token", StatusCodes.UNAUTHORIZED);
+  }
 }
 
 

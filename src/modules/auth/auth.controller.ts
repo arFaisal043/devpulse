@@ -11,21 +11,21 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authservice.loginUserService(req.body);
-
-  //set refresh token in cookies
+  
+  // set refresh token in cookies
   const { refreshToken } = result;
-  res.cookie("refreshToken", refreshToken, {
+  res.cookie("refreshToken", refreshToken as string, {
     secure: false,
     httpOnly: true,
     sameSite: "lax",
   });
-  
   sendSuccess(res, StatusCodes.OK, "Login successful!", result);
 });
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
-  //const result = await authservice.;
-  //sendSuccess(res, StatusCodes.OK, "Token refreshed successfully!", result);
+  // console.log(req.cookies);
+  const result = await authservice.refreshAccessToken(req.cookies.refreshToken);
+  sendSuccess(res, StatusCodes.OK, "Token refreshed successfully", result);
 });
 
 export const authController = {
