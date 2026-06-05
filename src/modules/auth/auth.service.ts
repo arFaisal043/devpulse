@@ -59,7 +59,7 @@ const registerUserService = async (userData: SignupInterface) => {
 const loginUserService = async (credentials: LoginInterface) => {
   const { email, password } = credentials;
 
-  // _______ Verify User ________________________
+  // _______ Verify User 
 
   // check 1: User give email and password or not?
   if (!email || !password) {
@@ -91,7 +91,7 @@ const loginUserService = async (credentials: LoginInterface) => {
   }
   //console.log("Password is matched ...");
 
-  // _______ JWT Token Generate ________________________
+  // _______ JWT Token Generate 
 
   const payload = {
     id: user.id,
@@ -123,7 +123,17 @@ const loginUserService = async (credentials: LoginInterface) => {
   };
 };
 
+
+const refreshAccessToken = async (refreshToken: string) => {
+  if(!refreshToken) {
+    throw new CustomError("Refresh token is required", StatusCodes.BAD_REQUEST);
+  }
+  
+}
+
+
 export const authservice = {
   registerUserService,
   loginUserService,
+  refreshAccessToken
 };
