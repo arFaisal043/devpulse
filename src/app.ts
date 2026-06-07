@@ -4,6 +4,7 @@ import { globalErrorHandler } from "./middleware/globalErrorHandler";
 import CookieParser from "cookie-parser";
 import { logMiddleware } from "./middleware/logger";
 import { IssuesRoute } from "./modules/issues/issues.route";
+import cors from "cors";
 
 const app: Application = express();
 
@@ -12,6 +13,13 @@ app.use(express.json());
 app.use(express.text());
 
 app.use(CookieParser());
+
+app.use(
+  cors({
+    origin: "http://localhost:5000",
+    optionsSuccessStatus: 200,
+  }),
+);
 
 app.use(logMiddleware);
 
@@ -24,7 +32,7 @@ app.get("/", (req: Request, res: Response) => {
     });
 })
 
-// All Routes
+// _________  All Routes
 app.use("/api/auth", AuthRoutes);
 app.use("/api/issues", IssuesRoute);
 

@@ -210,6 +210,8 @@ const updateIssue = async (
     return issue; // Nothing to update
   }
 
+  updates.push("updated_at = NOW()");
+
   values.push(id);
   const sql = `UPDATE issues SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`;
 
