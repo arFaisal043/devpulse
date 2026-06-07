@@ -3,6 +3,7 @@ import { AuthRoutes } from "./modules/auth/auth.route";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
 import CookieParser from "cookie-parser";
 import { logMiddleware } from "./middleware/logger";
+import { IssuesRoute } from "./modules/issues/issues.route";
 
 const app: Application = express();
 
@@ -25,7 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // All Routes
 app.use("/api/auth", AuthRoutes);
-
+app.use("/api/issues", IssuesRoute);
 
 
 // _________ Global Error Handler 

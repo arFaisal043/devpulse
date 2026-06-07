@@ -6,5 +6,6 @@ export const logMiddleware = (req: Request, res: Response, next: NextFunction) =
   // console.log(log);
   fs.appendFile("logger.txt", log, (err) => {
     if (err) throw err;
+    next();
   })
 }

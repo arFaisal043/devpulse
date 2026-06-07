@@ -59,7 +59,7 @@ const registerUserService = async (userData: SignupInterface) => {
 const loginUserService = async (credentials: LoginInterface) => {
   const { email, password } = credentials;
 
-  // _______ Verify User 
+  // _______ Verify User
 
   // check 1: User give email and password or not?
   if (!email || !password) {
@@ -91,11 +91,12 @@ const loginUserService = async (credentials: LoginInterface) => {
   }
   //console.log("Password is matched ...");
 
-  // _______ JWT Token Generate 
+  // _______ JWT Token Generate
 
   const payload = {
     id: user.id,
     name: user.name,
+    email: user.email,
     role: user.role,
   };
 
@@ -123,52 +124,47 @@ const loginUserService = async (credentials: LoginInterface) => {
   };
 };
 
-
 const refreshAccessToken = async (refreshToken: string) => {
   // __________ 1. if client's doesn't has refresh token in cookies
   if (!refreshToken) {
     throw new CustomError("Refresh token is required", StatusCodes.BAD_REQUEST);
   }
 
-  try {
-    // __________ 2. verify the token
-    const decode = jwt.verify(
-      refreshToken as string,
-      config.refreshSecret as string,
-    ) as JwtPayload;
+  // __________ 2. verify the token
+  const decode = jwt.verify(
+    refreshToken as string,
+    config.refreshSecret as string,
+  ) as JwtPayload;
 
-    // __________ 3. find the user into DB or not?
-    const userData = await pool.query(
-      `
+  // __________ 3. find the user into DB or not?
+  const userData = await pool.query(
+    `
     SELECT * FROM users WHERE email=$1
   `,
-      [decode.email],
-    );
-    const user = userData.rows[0];
+    [decode.email],
+  );
+  const user = userData.rows[0];
 
-    if (!user) {
-      throw new CustomError("User no longer exists", StatusCodes.UNAUTHORIZED);
-    }
-
-    const payload = {
-      id: user.id,
-      name: user.name,
-      role: user.role,
-    };
-
-    const accessToken = jwt.sign(payload, config.secret as string, {
-      expiresIn: config.expiresIn as any,
-    });
-
-    return {accessToken};
-  } catch (error) {
-    throw new CustomError("Invalid or expired refresh token", StatusCodes.UNAUTHORIZED);
+  if (!user) {
+    throw new CustomError("User no longer exists", StatusCodes.UNAUTHORIZED);
   }
-}
 
+  const payload = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = jwt.sign(payload, config.secret as string, {
+    expiresIn: config.expiresIn as any,
+  });
+
+  return { accessToken };
+};
 
 export const authservice = {
   registerUserService,
   loginUserService,
-  refreshAccessToken
+  refreshAccessToken,
 };
