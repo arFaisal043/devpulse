@@ -62,3 +62,13 @@ Time - Method - URL --> 2026-06-07T10:53:13.039Z - POST - /api/auth/signup
 Time - Method - URL --> 2026-06-07T10:53:35.719Z - POST - /api/auth/login
 Time - Method - URL --> 2026-06-07T10:54:13.944Z - POST - /api/issues
 Time - Method - URL --> 2026-06-07T10:56:14.519Z - POST - /api/issues
+Time - Method - URL --> 2026-06-07T16:23:43.172Z - POST - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:23:56.679Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:24:33.035Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:25:47.456Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:27:35.045Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:29:08.773Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:29:26.658Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:55:12.590Z - GET - /api/issues?sort=newest
+Time - Method - URL --> 2026-06-07T16:56:36.695Z - POST - /api/issues
+Time - Method - URL --> 2026-06-07T16:56:58.901Z - GET - /api/issues?sort=newest
