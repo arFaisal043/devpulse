@@ -22,8 +22,24 @@ const getIssuesById = catchAsync(async (req: Request, res: Response) => {
   sendSuccess(res, StatusCodes.OK, "Issue retrieved successfully!", result);
 });
 
+const updateIssue = catchAsync(async (req: Request, res: Response) => {
+  const issueId = Number(req.params.id);
+  const userId = req.user!.id;
+  const userRole = req.user!.role;
+  const result = await issueService.updateIssue( issueId, req.body, userId, userRole);
+  sendSuccess(res, StatusCodes.OK, "Issue updated successfully", result);
+})
+
+const deleteIssue = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await issueService.deleteIssue(id as string);
+  sendSuccess(res, StatusCodes.OK, "Issue deleted successfully!", result);
+});
+
 export const issuesController = {
   createIssue,
   getAllIssues,
   getIssuesById,
+  updateIssue,
+  deleteIssue,
 };

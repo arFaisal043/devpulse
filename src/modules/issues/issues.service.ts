@@ -88,7 +88,7 @@ const getAllIssues = async (query: any = {}) => {
         }
       : null,
     created_at: row.created_at,
-    updated_at: row.updated_at
+    updated_at: row.updated_at,
   }));
 };
 
@@ -124,12 +124,117 @@ const getIssuesById = async (issueId: string) => {
         }
       : null,
     created_at: row.created_at,
-    updated_at: row.updated_at
+    updated_at: row.updated_at,
   };
+};
+
+const updateIssue = async (
+  id: number,
+  updateData: any,
+  userId: number,
+  userRole: string,
+) => {
+  const issueResult = await pool.query(
+    `
+    SELECT * FROM issues WHERE id = $1
+    `,
+    [id],
+  );
+  const issue = issueResult.rows[0];
+
+  if (!issue) {
+    throw new CustomError("Issue not found", StatusCodes.NOT_FOUND);
+  }
+
+  // Authorization check
+  if (userRole !== "maintainer") {
+    if (issue.reporter_id !== userId) {
+      throw new CustomError(
+        "Forbidden: You can only update your own issues",
+        StatusCodes.FORBIDDEN,
+      );
+    }
+    if (issue.status !== "open") {
+      throw new CustomError(
+        "Conflict: You can only update issues with open status",
+        StatusCodes.CONFLICT,
+      );
+    }
+  }
+
+  const { title, description, type, status } = updateData;
+
+  const updates: string[] = [];
+  const values: any[] = [];
+  let paramIndex = 1;
+
+  if (title !== undefined) {
+    if (title.length > 150)
+      throw new CustomError("Title max 150 chars", StatusCodes.BAD_REQUEST);
+    updates.push(`title = $${paramIndex++}`);
+    values.push(title);
+  }
+
+  if (description !== undefined) {
+    if (description.length < 20)
+      throw new CustomError(
+        "Description min 20 chars",
+        StatusCodes.BAD_REQUEST,
+      );
+    updates.push(`description = $${paramIndex++}`);
+    values.push(description);
+  }
+
+  if (type !== undefined) {
+    if (type !== "bug" && type !== "feature_request")
+      throw new CustomError("Invalid type", StatusCodes.BAD_REQUEST);
+    updates.push(`type = $${paramIndex++}`);
+    values.push(type);
+  }
+
+  if (status !== undefined) {
+    if (userRole !== "maintainer") {
+      throw new CustomError(
+        "Forbidden: Only maintainers can change status",
+        StatusCodes.FORBIDDEN,
+      );
+    }
+    if (!["open", "in_progress", "resolved"].includes(status)) {
+      throw new CustomError("Invalid status", StatusCodes.BAD_REQUEST);
+    }
+    updates.push(`status = $${paramIndex++}`);
+    values.push(status);
+  }
+
+  if (updates.length === 0) {
+    return issue; // Nothing to update
+  }
+
+  values.push(id);
+  const sql = `UPDATE issues SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`;
+
+  const result = await pool.query(sql, values);
+  return result.rows[0];
+};
+
+const deleteIssue = async (issueId: string) => {
+  const result = await pool.query(
+    `
+    DELETE FROM issues WHERE id=$1
+  `,[issueId],
+  );
+
+  if (result.rowCount === 0) {
+    throw new CustomError("Issue not found", StatusCodes.NOT_FOUND);
+  }
+
+  return result.rows[0];
 };
 
 export const issueService = {
   createIssue,
   getAllIssues,
   getIssuesById,
+  updateIssue,
+  deleteIssue,
 };
