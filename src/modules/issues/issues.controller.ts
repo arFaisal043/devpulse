@@ -11,6 +11,9 @@ const createIssue = catchAsync(async (req: Request, res: Response) => {
   sendSuccess(res, StatusCodes.CREATED, "Issue created successfully", result);
 });
 
+const getAllIssues = catchAsync(async (req: Request, res: Response) => {})
+
 export const issuesController = {
   createIssue,
+  getAllIssues,
 };
