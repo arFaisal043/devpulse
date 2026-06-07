@@ -80,19 +80,56 @@ const getAllIssues = async (query: any = {}) => {
     description: row.description,
     type: row.type,
     status: row.status,
-    created_at: row.created_at,
-    updated_at: row.updated_at,
     reporter: row.reporter_id
       ? {
-        id: row.reporter_id,
-        name: row.reporter_name,
-        role: row.reporter_role,
-      }
+          id: row.reporter_id,
+          name: row.reporter_name,
+          role: row.reporter_role,
+        }
       : null,
+    created_at: row.created_at,
+    updated_at: row.updated_at
   }));
+};
+
+const getIssuesById = async (issueId: string) => {
+  const result = await pool.query(
+    `
+    SELECT 
+      i.id, i.title, i.description, i.type, i.status, i.created_at, i.updated_at, i.reporter_id,
+      u.name as reporter_name, u.role as reporter_role
+    FROM issues i
+    LEFT JOIN users u ON i.reporter_id = u.id
+    WHERE i.id = $1
+    `,
+    [issueId],
+  );
+
+  const row = result.rows[0];
+  if (!row) {
+    throw new CustomError("Here is not any issue!", StatusCodes.NOT_FOUND);
+  }
+
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    type: row.type,
+    status: row.status,
+    reporter: row.reporter_id
+      ? {
+          id: row.reporter_id,
+          name: row.reporter_name,
+          role: row.reporter_role,
+        }
+      : null,
+    created_at: row.created_at,
+    updated_at: row.updated_at
+  };
 };
 
 export const issueService = {
   createIssue,
   getAllIssues,
+  getIssuesById,
 };

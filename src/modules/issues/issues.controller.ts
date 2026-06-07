@@ -11,11 +11,19 @@ const createIssue = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllIssues = catchAsync(async (req: Request, res: Response) => {
+  // console.log(req.query.sort)
   const result = await issueService.getAllIssues(req.query);
   sendSuccess(res, StatusCodes.OK, "Issues retrieved successfully!", result);
 })
 
+const getIssuesById = catchAsync(async (req: Request, res: Response) => {
+  const {id} = req.params;
+  const result = await issueService.getIssuesById(id as string);
+  sendSuccess(res, StatusCodes.OK, "Issue retrieved successfully!", result);
+});
+
 export const issuesController = {
   createIssue,
   getAllIssues,
+  getIssuesById,
 };
