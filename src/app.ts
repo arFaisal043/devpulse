@@ -16,7 +16,8 @@ app.use(CookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5000",
+    origin: process.env.CLIENT_URL || "http://localhost:5000",
+    credentials: true,
     optionsSuccessStatus: 200,
   }),
 );

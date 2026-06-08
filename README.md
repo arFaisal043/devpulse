@@ -72,6 +72,39 @@ The codebase relies heavily on the **Controller-Service Pattern**:
 
 ---
 
+## 📂 Project Structure
+
+```text
+src/
+├── config/
+│   └── index.ts        
+├── db/
+│   └── schema.ts    
+├── middleware/
+│   ├── auth.middleware.ts
+│   ├── globalErrorHandler.ts
+│   ├── index.d.ts     
+│   └── logger.ts
+├── modules/
+│   ├── auth/
+│   │   ├── auth.controller.ts
+│   │   ├── auth.interface.ts
+│   │   ├── auth.route.ts
+│   │   └── auth.service.ts
+│   └── issues/
+│       ├── issues.controller.ts
+│       ├── issues.route.ts
+│       └── issues.service.ts
+├── utils/
+│   ├── catchAsync.ts    
+│   ├── customError.ts  
+│   └── response.ts      
+├── app.ts               
+└── server.ts          
+```
+
+---
+
 ## 👥 Author
 
 **Abdur Rahman Faisal**  
