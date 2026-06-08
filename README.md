@@ -6,6 +6,8 @@
 
 DevPulse is a robust RESTful API built with **Node.js**, **Express**, and **TypeScript**. It utilizes a **PostgreSQL** database accessed via raw SQL queries (`pg` driver) to manage users and track issues efficiently. The project follows a clean **Controller-Service architecture**, ensuring a scalable and maintainable codebase.
 
+✅ Live Deployment URL: https://devpulse-iums.onrender.com
+
 ---
 
 ## 🛠️ Technology Stack
