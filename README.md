@@ -1,4 +1,4 @@
-# 🚼 DevPulse
+# DevPulse
 
 > **Internal Tech Issue & Feature Tracker**
 > 
